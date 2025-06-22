@@ -2,7 +2,7 @@
   "ver": "1.0.23",
   "importer": "image",
   "imported": true,
-  "uuid": "488bbe99-0cab-4196-a240-2606d42433d2",
+  "uuid": "f1fa59fe-6da2-457c-9da3-33b736a40ab4",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "488bbe99-0cab-4196-a240-2606d42433d2@6c48a",
+      "uuid": "f1fa59fe-6da2-457c-9da3-33b736a40ab4@6c48a",
       "displayName": "background-divider",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "488bbe99-0cab-4196-a240-2606d42433d2",
+        "imageUuidOrDatabaseUri": "f1fa59fe-6da2-457c-9da3-33b736a40ab4",
         "isUuid": true,
         "minfilter": "linear",
         "magfilter": "linear",
@@ -33,7 +33,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "488bbe99-0cab-4196-a240-2606d42433d2@f9941",
+      "uuid": "f1fa59fe-6da2-457c-9da3-33b736a40ab4@f9941",
       "displayName": "background-divider",
       "id": "f9941",
       "name": "spriteFrame",
@@ -45,17 +45,17 @@
         "offsetY": 0,
         "trimX": 0,
         "trimY": 0,
-        "width": 1788,
-        "height": 24,
-        "rawWidth": 1788,
-        "rawHeight": 24,
+        "width": 1280,
+        "height": 17,
+        "rawWidth": 1280,
+        "rawHeight": 17,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "488bbe99-0cab-4196-a240-2606d42433d2@6c48a",
+        "imageUuidOrDatabaseUri": "f1fa59fe-6da2-457c-9da3-33b736a40ab4@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -70,6 +70,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "488bbe99-0cab-4196-a240-2606d42433d2@f9941"
+    "redirect": "f1fa59fe-6da2-457c-9da3-33b736a40ab4@f9941"
   }
 }

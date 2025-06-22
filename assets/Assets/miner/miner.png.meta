@@ -2,7 +2,7 @@
   "ver": "1.0.23",
   "importer": "image",
   "imported": true,
-  "uuid": "c9302621-5b2b-46be-8c25-e51421b4bf96",
+  "uuid": "2d1586ad-1765-4116-83d4-3aef31c19f7e",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "c9302621-5b2b-46be-8c25-e51421b4bf96@6c48a",
+      "uuid": "2d1586ad-1765-4116-83d4-3aef31c19f7e@6c48a",
       "displayName": "miner",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "c9302621-5b2b-46be-8c25-e51421b4bf96",
+        "imageUuidOrDatabaseUri": "2d1586ad-1765-4116-83d4-3aef31c19f7e",
         "isUuid": true,
         "minfilter": "linear",
         "magfilter": "linear",
@@ -33,7 +33,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "c9302621-5b2b-46be-8c25-e51421b4bf96@f9941",
+      "uuid": "2d1586ad-1765-4116-83d4-3aef31c19f7e@f9941",
       "displayName": "miner",
       "id": "f9941",
       "name": "spriteFrame",
@@ -41,21 +41,21 @@
         "trimType": "auto",
         "trimThreshold": 1,
         "rotated": false,
-        "offsetX": -2.5,
-        "offsetY": 7.5,
-        "trimX": 28,
-        "trimY": 5,
-        "width": 1307,
-        "height": 1298,
-        "rawWidth": 1368,
-        "rawHeight": 1323,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 1,
+        "trimY": 0,
+        "width": 110,
+        "height": 108,
+        "rawWidth": 112,
+        "rawHeight": 108,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "c9302621-5b2b-46be-8c25-e51421b4bf96@6c48a",
+        "imageUuidOrDatabaseUri": "2d1586ad-1765-4116-83d4-3aef31c19f7e@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -70,6 +70,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "c9302621-5b2b-46be-8c25-e51421b4bf96@f9941"
+    "redirect": "2d1586ad-1765-4116-83d4-3aef31c19f7e@f9941"
   }
 }

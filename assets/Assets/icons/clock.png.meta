@@ -2,7 +2,7 @@
   "ver": "1.0.23",
   "importer": "image",
   "imported": true,
-  "uuid": "cd846d32-564a-40f0-a406-2c01727f0626",
+  "uuid": "86cf309b-947b-405a-8689-d2189e05987e",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "cd846d32-564a-40f0-a406-2c01727f0626@6c48a",
+      "uuid": "86cf309b-947b-405a-8689-d2189e05987e@6c48a",
       "displayName": "clock",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "cd846d32-564a-40f0-a406-2c01727f0626",
+        "imageUuidOrDatabaseUri": "86cf309b-947b-405a-8689-d2189e05987e",
         "isUuid": true,
         "minfilter": "linear",
         "magfilter": "linear",
@@ -33,7 +33,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "cd846d32-564a-40f0-a406-2c01727f0626@f9941",
+      "uuid": "86cf309b-947b-405a-8689-d2189e05987e@f9941",
       "displayName": "clock",
       "id": "f9941",
       "name": "spriteFrame",
@@ -42,20 +42,20 @@
         "trimThreshold": 1,
         "rotated": false,
         "offsetX": 0,
-        "offsetY": 0,
+        "offsetY": 0.5,
         "trimX": 0,
         "trimY": 0,
-        "width": 168,
-        "height": 191,
-        "rawWidth": 168,
-        "rawHeight": 191,
+        "width": 58,
+        "height": 65,
+        "rawWidth": 58,
+        "rawHeight": 66,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "cd846d32-564a-40f0-a406-2c01727f0626@6c48a",
+        "imageUuidOrDatabaseUri": "86cf309b-947b-405a-8689-d2189e05987e@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -70,6 +70,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "cd846d32-564a-40f0-a406-2c01727f0626@f9941"
+    "redirect": "86cf309b-947b-405a-8689-d2189e05987e@f9941"
   }
 }

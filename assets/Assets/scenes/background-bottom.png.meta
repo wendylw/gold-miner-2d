@@ -2,7 +2,7 @@
   "ver": "1.0.23",
   "importer": "image",
   "imported": true,
-  "uuid": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8",
+  "uuid": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8@6c48a",
+      "uuid": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24@6c48a",
       "displayName": "background-bottom",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8",
+        "imageUuidOrDatabaseUri": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24",
         "isUuid": true,
         "minfilter": "linear",
         "magfilter": "linear",
@@ -33,7 +33,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8@f9941",
+      "uuid": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24@f9941",
       "displayName": "background-bottom",
       "id": "f9941",
       "name": "spriteFrame",
@@ -45,17 +45,17 @@
         "offsetY": 0,
         "trimX": 0,
         "trimY": 0,
-        "width": 2008,
-        "height": 894,
-        "rawWidth": 2008,
-        "rawHeight": 894,
+        "width": 1280,
+        "height": 570,
+        "rawWidth": 1280,
+        "rawHeight": 570,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8@6c48a",
+        "imageUuidOrDatabaseUri": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -70,6 +70,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "2a580e7f-e752-4eef-a7da-99b2e45fcdf8@f9941"
+    "redirect": "44222883-dbd2-4c2d-bbe3-4d9f4bd7ca24@f9941"
   }
 }
