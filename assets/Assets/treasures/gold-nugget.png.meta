@@ -2,7 +2,7 @@
   "ver": "1.0.23",
   "importer": "image",
   "imported": true,
-  "uuid": "a12e6efd-41e2-4560-9cc9-500d6a6a9174",
+  "uuid": "ec8b0add-8444-4472-9f74-967169dc9e34",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "a12e6efd-41e2-4560-9cc9-500d6a6a9174@6c48a",
+      "uuid": "ec8b0add-8444-4472-9f74-967169dc9e34@6c48a",
       "displayName": "gold-nugget",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "a12e6efd-41e2-4560-9cc9-500d6a6a9174",
+        "imageUuidOrDatabaseUri": "ec8b0add-8444-4472-9f74-967169dc9e34",
         "isUuid": true,
         "minfilter": "linear",
         "magfilter": "linear",
@@ -33,7 +33,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "a12e6efd-41e2-4560-9cc9-500d6a6a9174@f9941",
+      "uuid": "ec8b0add-8444-4472-9f74-967169dc9e34@f9941",
       "displayName": "gold-nugget",
       "id": "f9941",
       "name": "spriteFrame",
@@ -41,21 +41,21 @@
         "trimType": "auto",
         "trimThreshold": 1,
         "rotated": false,
-        "offsetX": 2.5,
-        "offsetY": -39,
-        "trimX": 70,
-        "trimY": 151,
-        "width": 1065,
-        "height": 968,
-        "rawWidth": 1200,
-        "rawHeight": 1192,
+        "offsetX": 1,
+        "offsetY": -19,
+        "trimX": 35,
+        "trimY": 75,
+        "width": 532,
+        "height": 484,
+        "rawWidth": 600,
+        "rawHeight": 596,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "a12e6efd-41e2-4560-9cc9-500d6a6a9174@6c48a",
+        "imageUuidOrDatabaseUri": "ec8b0add-8444-4472-9f74-967169dc9e34@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -70,6 +70,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "a12e6efd-41e2-4560-9cc9-500d6a6a9174@f9941"
+    "redirect": "ec8b0add-8444-4472-9f74-967169dc9e34@f9941"
   }
 }
