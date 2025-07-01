@@ -21,11 +21,11 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 202
+      "__id__": 205
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 203
+      "__id__": 206
     },
     "_id": "116afe31-f9cb-42ba-b56f-f0006d19f2ec"
   },
@@ -95,13 +95,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 199
+        "__id__": 202
       },
       {
-        "__id__": 200
+        "__id__": 203
       },
       {
-        "__id__": 201
+        "__id__": 204
       }
     ],
     "_prefab": null,
@@ -189,7 +189,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 583.5294117647059,
+    "_orthoHeight": 580.2076124567474,
     "_near": 0,
     "_far": 2000,
     "_color": {
@@ -3499,7 +3499,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "RopeAnchorPoint",
+    "_name": "Rope",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -3510,12 +3510,22 @@
       }
     ],
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 199
+      },
+      {
+        "__id__": 200
+      },
+      {
+        "__id__": 201
+      }
+    ],
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -25.311000000000035,
-      "y": 248.27199999999993,
+      "x": -22.44,
+      "y": 246.841,
       "z": 0
     },
     "_lrot": {
@@ -3531,18 +3541,18 @@
       "y": 1,
       "z": 1
     },
-    "_layer": 1073741824,
+    "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
       "z": 0
     },
-    "_id": "75BN24rSRBXb0a4lAiWzP+"
+    "_id": "24izkpD5lPRqCTnaj7HXRK"
   },
   {
     "__type__": "cc.Node",
-    "_name": "Rope",
+    "_name": "Claw",
     "_objFlags": 0,
     "_parent": {
       "__id__": 194
@@ -3564,7 +3574,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
+      "y": -65.076,
       "z": 0
     },
     "_lrot": {
@@ -3580,14 +3590,14 @@
       "y": 1,
       "z": 1
     },
-    "_layer": 1073741824,
+    "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
       "z": 0
     },
-    "_id": "00uhS9HsBIS4L5YCxSRaiy"
+    "_id": "30FEFKrklB15r0F4ws0PE/"
   },
   {
     "__type__": "cc.UITransform",
@@ -3600,18 +3610,18 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 100
+      "width": 41,
+      "height": 38
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
+      "x": 0.2,
+      "y": 0.84
     },
-    "_id": "6fmiNHT1lOrKQVNUjXWZ3s"
+    "_id": "e1aeiIbEdFlaZvxqMnbeDA"
   },
   {
-    "__type__": "cc.Graphics",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3630,28 +3640,27 @@
       "b": 255,
       "a": 255
     },
-    "_lineWidth": 4,
-    "_strokeColor": {
-      "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
-      "a": 255
+    "_spriteFrame": {
+      "__uuid__": "1182b844-1408-47f6-bdee-c594192a74a7@f9941",
+      "__expectedType__": "cc.SpriteFrame"
     },
-    "_lineJoin": 2,
-    "_lineCap": 0,
-    "_fillColor": {
-      "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
-      "a": 255
+    "_type": 0,
+    "_fillType": 0,
+    "_sizeMode": 1,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
     },
-    "_miterLimit": 10,
-    "_id": "0eLTZSlCJCsYL9JFQlbS7R"
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_useGrayscale": false,
+    "_atlas": null,
+    "_id": "51O0Foz0FD1oTPhdoLfq10"
   },
   {
-    "__type__": "48620/OVAFLA7mARIKqd/Fp",
+    "__type__": "cc.PolygonCollider2D",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3659,7 +3668,190 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_id": "20a3ITuppPMYcYe+0c+aKW"
+    "tag": 0,
+    "_group": 1,
+    "_density": 1,
+    "_sensor": false,
+    "_friction": 0.2,
+    "_restitution": 0,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_points": [
+      {
+        "__type__": "cc.Vec2",
+        "x": 9.799999999999999,
+        "y": 6.080000000000002
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -0.20000000000000107,
+        "y": 4.080000000000002
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -8.200000000000001,
+        "y": -9.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -8.200000000000001,
+        "y": -17.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -2.200000000000001,
+        "y": -31.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 3.799999999999999,
+        "y": -21.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 3.799999999999999,
+        "y": -19.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -1.200000000000001,
+        "y": -14.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": -1.200000000000001,
+        "y": -11.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 3.799999999999999,
+        "y": -1.9199999999999982
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 14.799999999999999,
+        "y": -0.9199999999999982
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 18.799999999999997,
+        "y": -3.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 20.799999999999997,
+        "y": -7.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 32.8,
+        "y": -5.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 31.799999999999997,
+        "y": -2.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 29.799999999999997,
+        "y": -2.919999999999998
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 27.799999999999997,
+        "y": 0.08000000000000185
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 25.799999999999997,
+        "y": 0.08000000000000185
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 18.799999999999997,
+        "y": 6.080000000000002
+      }
+    ],
+    "_id": "ad8A5arwdAJYZliv7PrwNV"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 194
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 100
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_id": "ec3AB8WD9C7Z6XmyPGAVJY"
+  },
+  {
+    "__type__": "cc.Graphics",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 194
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_visFlags": 0,
+    "_customMaterial": null,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_lineWidth": 1,
+    "_strokeColor": {
+      "__type__": "cc.Color",
+      "r": 63,
+      "g": 55,
+      "b": 55,
+      "a": 255
+    },
+    "_lineJoin": 2,
+    "_lineCap": 0,
+    "_fillColor": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_miterLimit": 10,
+    "_id": "87eiigtdJEGaSR/xZr1EaN"
+  },
+  {
+    "__type__": "48620/OVAFLA7mARIKqd/Fp",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 194
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "claw": {
+      "__id__": 195
+    },
+    "_id": "c2F+TDsG9AlbIVquYFgLyT"
   },
   {
     "__type__": "cc.UITransform",
@@ -3777,19 +3969,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 204
-    },
-    "shadows": {
-      "__id__": 205
-    },
-    "_skybox": {
-      "__id__": 206
-    },
-    "fog": {
       "__id__": 207
     },
-    "octree": {
+    "shadows": {
       "__id__": 208
+    },
+    "_skybox": {
+      "__id__": 209
+    },
+    "fog": {
+      "__id__": 210
+    },
+    "octree": {
+      "__id__": 211
     }
   },
   {
