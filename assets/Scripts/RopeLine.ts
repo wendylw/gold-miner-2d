@@ -1,4 +1,15 @@
-import { _decorator, Component, Graphics, Node, EventTouch, Collider2D } from 'cc';
+import {
+  _decorator,
+  Component,
+  Graphics,
+  Node,
+  EventTouch,
+  Collider2D,
+  director,
+  systemEvent,
+  SystemEvent,
+  UITransform,
+} from 'cc';
 const { ccclass, property } = _decorator;
 
 enum RopeState {
@@ -26,7 +37,15 @@ export class RopeLine extends Component {
   claw: Node = null!; // 在编辑器里拖拽 Claw 节点到这里
 
   onLoad() {
-    this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
+    // 用类型获取 UITransform
+    let uiTransform = this.node.getComponent(UITransform);
+    if (!uiTransform) {
+      uiTransform = this.node.addComponent(UITransform);
+    }
+    uiTransform.setContentSize(400, 600);
+
+    systemEvent.on(SystemEvent.EventType.TOUCH_START, this.onTouch, this);
+
     // 监听碰撞
     const collider = this.claw.getComponent(Collider2D);
     if (collider) {
@@ -96,5 +115,9 @@ export class RopeLine extends Component {
         this.hit = false;
       }
     }
+  }
+
+  onDestroy() {
+    systemEvent.off(SystemEvent.EventType.TOUCH_START, this.onTouch, this);
   }
 }
