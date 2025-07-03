@@ -27,10 +27,10 @@ export class RopeLine extends Component {
   private swingRange: number = 0.5; // 最大摆动幅度（弧度）
 
   private state: RopeState = RopeState.SWING;
-  private extendSpeed: number = 200; // 线伸长速度（像素/秒）
+  private extendSpeed: number = 400; // 线伸长速度（像素/秒）
   private retractSpeed: number = 300; // 线收回速度
   private minLength: number = 70; // 最短长度
-  private maxLength: number = 300; // 最长长度
+  private maxLength: number = 500; // 最长长度，调大一点
   private hit: boolean = false; // 是否碰撞
 
   @property(Node)
@@ -46,11 +46,7 @@ export class RopeLine extends Component {
 
     systemEvent.on(SystemEvent.EventType.TOUCH_START, this.onTouch, this);
 
-    // 监听碰撞
-    const collider = this.claw.getComponent(Collider2D);
-    if (collider) {
-      collider.on('onCollisionEnter', this.onClawHit, this);
-    }
+    // 不在这里监听碰撞，交给 Claw.ts 处理
   }
 
   onTouch() {
@@ -59,14 +55,28 @@ export class RopeLine extends Component {
     }
   }
 
+  // 被 Claw.ts 调用，通知碰撞发生
   onClawHit() {
-    this.hit = true;
+    if (this.state === RopeState.EXTEND) {
+      this.state = RopeState.RETRACT;
+    }
   }
 
   start() {
     this.g = this.getComponent(Graphics)!;
     this.g.lineWidth = 2;
     this.g.strokeColor.fromHEX('#3F3737');
+
+    // 获取 Canvas 节点
+    const canvas = this.node.scene.getChildByName('Canvas');
+    if (canvas) {
+      const canvasUI = canvas.getComponent(UITransform)!;
+      const ropePosInCanvas = canvasUI.convertToNodeSpaceAR(this.node.worldPosition);
+      const canvasHeight = canvasUI.height;
+      // 计算 Rope 到画布底部的距离（向下）
+      const ropeToBottom = canvasHeight / 2 + ropePosInCanvas.y;
+      this.maxLength = ropeToBottom + 120; // 可超出底部 120
+    }
 
     // 初始化时让 Claw 在绳子末端
     const x = Math.sin(this.swingAngle) * this.currentLength;
@@ -89,6 +99,8 @@ export class RopeLine extends Component {
     this.g.stroke();
 
     if (this.claw) {
+      // 推荐 claw 只加 Collider2D（sensor=true），不要加 Rigidbody2D
+      // 直接 setPosition 不会影响碰撞检测
       this.claw.setPosition(x, y);
       this.claw.angle = (this.swingAngle * 180) / Math.PI - 36;
     }
@@ -100,10 +112,6 @@ export class RopeLine extends Component {
         this.currentLength = this.maxLength;
         this.state = RopeState.RETRACT;
       }
-      // 检测碰撞（伪代码，需用实际碰撞检测替换）
-      if (this.hit) {
-        this.state = RopeState.RETRACT;
-      }
     }
 
     // 收回
@@ -112,8 +120,8 @@ export class RopeLine extends Component {
       if (this.currentLength <= this.minLength) {
         this.currentLength = this.minLength;
         this.state = RopeState.SWING;
-        this.hit = false;
       }
+      console.log('RopeLine 收回');
     }
   }
 
