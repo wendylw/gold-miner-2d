@@ -27,7 +27,7 @@ export class RopeLine extends Component {
   private swingRange: number = 0.5; // 最大摆动幅度（弧度）
 
   private state: RopeState = RopeState.SWING;
-  private extendSpeed: number = 400; // 线伸长速度（像素/秒）
+  private extendSpeed: number = 100; // 线伸长速度（像素/秒），先调小测试
   private retractSpeed: number = 300; // 线收回速度
   private minLength: number = 70; // 最短长度
   private maxLength: number = 500; // 最长长度，调大一点
@@ -35,6 +35,9 @@ export class RopeLine extends Component {
 
   @property(Node)
   claw: Node = null!; // 在编辑器里拖拽 Claw 节点到这里
+
+  @property(Node)
+  treasure: Node = null!; // 在编辑器里拖拽 Treasure 节点到这里
 
   onLoad() {
     // 用类型获取 UITransform
@@ -65,7 +68,8 @@ export class RopeLine extends Component {
   start() {
     this.g = this.getComponent(Graphics)!;
     this.g.lineWidth = 2;
-    this.g.strokeColor.fromHEX('#3F3737');
+    // this.g.strokeColor.fromHEX('#3F3737');
+    this.g.strokeColor.fromHEX('#ff0000');
 
     // 获取 Canvas 节点
     const canvas = this.node.scene.getChildByName('Canvas');
@@ -122,6 +126,13 @@ export class RopeLine extends Component {
         this.state = RopeState.SWING;
       }
       console.log('RopeLine 收回');
+    }
+
+    if (this.claw && this.treasure) {
+      // 获取世界坐标
+      const clawWorldPos = this.claw.getWorldPosition();
+      const treasureWorldPos = this.treasure.getWorldPosition();
+      console.log('claw:', clawWorldPos, 'treasure:', treasureWorldPos);
     }
   }
 
