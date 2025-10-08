@@ -10,7 +10,6 @@ import {
   SystemEvent,
   UITransform,
   RigidBody2D,
-  ERigidBody2DType,
   Vec2,
   Color,
 } from 'cc';
@@ -28,16 +27,32 @@ export class RopeLine extends Component {
 
   private g: Graphics = null!;
   private ropeColor: Color = new Color(255, 51, 51, 255);
-  private currentLength: number = 70; // 初始线的长度
-  private swingAngle: number = 0; // 当前角度（弧度）
-  private swingSpeed: number = 1.5; // 摆动速度（弧度/秒）
-  private swingRange: number = 0.5; // 最大摆动幅度（弧度）
+  // 运行时的当前长度与摆动状态
+  private currentLength: number = 70;
+  private swingAngle: number = 0;
+  private swingT: number = 0;
+
+  // 可在 Inspector 调整的参数
+  @property
+  startLength: number = 70;
+  @property
+  minLength: number = 70;
+  @property
+  maxLength: number = 500;
+  @property
+  extendSpeed: number = 100; // 线伸长速度（像素/秒）
+  @property
+  retractSpeed: number = 300; // 线收回速度
+  @property
+  swingSpeed: number = 1.5; // 摆动速度（弧度/秒）
+  @property
+  swingRange: number = 0.5; // 最大摆幅（弧度）
+  @property
+  autoComputeMaxLength: boolean = true; // 自动按画布底部计算最大长度
+  @property
+  extraOvershoot: number = 120; // 超出底部的额外像素
 
   private state: RopeState = RopeState.SWING;
-  private extendSpeed: number = 100; // 线伸长速度（像素/秒），先调小测试
-  private retractSpeed: number = 300; // 线收回速度
-  private minLength: number = 70; // 最短长度
-  private maxLength: number = 500; // 最长长度，调大一点
   private hit: boolean = false; // 是否碰撞（用于防止多次触发）
 
   // 在末端预留的像素（如果你的钩子贴图不带绳子，设为 0 即可）
@@ -57,6 +72,14 @@ export class RopeLine extends Component {
 
   @property(Node)
   claw: Node = null!; // 在编辑器里拖拽 Claw 节点到这里
+
+  // 爪子贴图相对于绳子的朝向修正（角度，单位度）
+  @property
+  clawAngleOffset: number = -36;
+
+  // 调试：是否绘制理论末端和实际爪子位置的小点
+  @property
+  debugDrawTargets: boolean = false;
 
   // 是否用“速度追赶”的方式让爪子跟随目标位置（可能产生长度相关的相位差/闪动）
   // 默认关闭：直接 setPosition，确保与绳子的角度/频率完全一致
@@ -133,18 +156,22 @@ export class RopeLine extends Component {
     }
 
     this.g.lineWidth = Math.max(1, this.ropeWidth);
-    this.g.strokeColor.fromHEX('#ff3333'); // 调试用：更鲜明的红色
-    this.g.fillColor.fromHEX('#ff3333');   // 填充颜色与描边一致，确保可见
+    this.g.strokeColor.fromHEX('#000000'); // 绳子颜色：黑色
+    this.g.fillColor.fromHEX('#000000');   // 填充颜色与描边一致，确保可见
 
-    // 获取 Canvas 节点
+    // 初始化长度
+    this.currentLength = this.startLength;
+
+    // 计算最大长度：优先自动根据画布到底部的距离
     const canvas = this.node.scene.getChildByName('Canvas');
     if (canvas) {
       const canvasUI = canvas.getComponent(UITransform)!;
       const ropePosInCanvas = canvasUI.convertToNodeSpaceAR(this.node.worldPosition);
       const canvasHeight = canvasUI.height;
-      // 计算 Rope 到画布底部的距离（向下）
-      const ropeToBottom = canvasHeight / 2 + ropePosInCanvas.y;
-      this.maxLength = ropeToBottom + 120; // 可超出底部 120
+      const ropeToBottom = canvasHeight / 2 + ropePosInCanvas.y; // 向下的距离
+      if (this.autoComputeMaxLength) {
+        this.maxLength = ropeToBottom + Math.max(0, this.extraOvershoot);
+      }
     }
 
     // 初始化时让 Claw 在绳子末端
@@ -157,7 +184,8 @@ export class RopeLine extends Component {
 
   update(deltaTime: number) {
     if (this.state === RopeState.SWING) {
-      this.swingAngle = Math.sin(performance.now() * 0.001 * this.swingSpeed) * this.swingRange;
+      this.swingT += deltaTime;
+      this.swingAngle = Math.sin(this.swingT * this.swingSpeed) * this.swingRange;
     }
     const x = Math.sin(this.swingAngle) * this.currentLength;
     const y = -Math.cos(this.swingAngle) * this.currentLength;
@@ -165,10 +193,52 @@ export class RopeLine extends Component {
     const rb = this.claw ? this.claw.getComponent(RigidBody2D) : null;
     const cur = this.claw ? this.claw.getPosition() : null;
 
-    // 绘制到“理论末端”（x,y），确保与绳子角度/频率完全一致；
-    // 末端预留 hideAtClawPx 像素，避免与 Claw 精灵自带的短绳重叠造成“重影/半透明”。
-    const targetX = x;
-    const targetY = y;
+    // 跟随策略：
+    // - useKinematicChase=true 且存在刚体 -> 用速度追踪（可能有轻微滞后）
+    // - 其它情况 -> 直接设位置，确保与绳端完全重合
+    if (this.claw) {
+      if (rb && this.useKinematicChase) {
+        const invDt = 60; // 用固定物理步长 1/60s，避免不同帧率导致的不同频
+        rb.linearVelocity = new Vec2((x - cur!.x) * invDt, (y - cur!.y) * invDt);
+      } else {
+        if (rb) rb.linearVelocity = new Vec2(0, 0);
+        this.claw.setPosition(x, y);
+      }
+      this.claw.angle = Math.atan2(y, x) * 180 / Math.PI + this.clawAngleOffset;
+    }
+
+    // 伸长
+    if (this.state === RopeState.EXTEND) {
+      this.currentLength += this.extendSpeed * deltaTime;
+      if (this.currentLength >= this.maxLength) {
+        this.currentLength = this.maxLength;
+        this.state = RopeState.RETRACT;
+      }
+    }
+
+    // 收回
+    if (this.state === RopeState.RETRACT) {
+      this.currentLength -= this.retractSpeed * deltaTime;
+      if (this.currentLength <= this.minLength) {
+        this.currentLength = this.minLength;
+        this.state = RopeState.SWING;
+        this.hit = false;
+      }
+    }
+  }
+
+  lateUpdate(deltaTime: number) {
+    // 物理步之后再绘制，使用 Claw 的实际位置作为末端
+    const cur = this.claw ? this.claw.getPosition() : null;
+    const targetX = cur ? cur.x : Math.sin(this.swingAngle) * this.currentLength;
+    const targetY = cur ? cur.y : -Math.cos(this.swingAngle) * this.currentLength;
+
+    // 同步一次爪子的朝向（基于最终用于绘制的方向向量）
+    if (this.claw) {
+      const theta = Math.atan2(targetY, targetX);
+      this.claw.angle = theta * 180 / Math.PI + this.clawAngleOffset;
+    }
+
     let endX = targetX;
     let endY = targetY;
     if (this.hideAtClawPx > 0) {
@@ -185,6 +255,7 @@ export class RopeLine extends Component {
       endX = Math.round(endX);
       endY = Math.round(endY);
     }
+
     this.g.clear();
     this.g.lineWidth = Math.max(1, this.ropeWidth);
 
@@ -210,7 +281,6 @@ export class RopeLine extends Component {
           x3 = snap(x3); y3 = snap(y3);
           x4 = snap(x4); y4 = snap(y4);
         }
-        // 用与描边一致的颜色填充（已在 start() 中同步设置 fillColor）
         this.g.moveTo(x1, y1);
         this.g.lineTo(x2, y2);
         this.g.lineTo(x3, y3);
@@ -231,41 +301,25 @@ export class RopeLine extends Component {
       this.g.stroke();
     }
 
-    if (this.claw) {
-      // 视觉上：直接把 Claw 放到理论末端 (x,y)，消除 1 帧滞后
-      const prevX = cur ? cur.x : x;
-      const prevY = cur ? cur.y : y;
-      this.claw.setPosition(x, y);
-      // 物理上：给刚体一个“1 帧到位”的线速度，保证接触事件稳定
-      if (rb) {
-        const invDt = 1 / Math.max(deltaTime, 1 / 120);
-        rb.linearVelocity = new Vec2((x - prevX) * invDt, (y - prevY) * invDt);
+    // 调试可视化：红点=理论末端，绿点=Claw 实际位置
+    if (this.debugDrawTargets) {
+      const saved = new Color(this.g.fillColor.r, this.g.fillColor.g, this.g.fillColor.b, this.g.fillColor.a);
+      const r = Math.max(1, Math.min(3, this.ropeWidth * 0.3));
+      // 红点（理论目标）
+      this.g.fillColor = new Color(255, 60, 60, 255);
+      const tx = Math.sin(this.swingAngle) * this.currentLength;
+      const ty = -Math.cos(this.swingAngle) * this.currentLength;
+      this.g.circle(tx, ty, r);
+      this.g.fill();
+      // 绿点（实际 claw）
+      if (cur) {
+        this.g.fillColor = new Color(60, 255, 120, 255);
+        this.g.circle(cur.x, cur.y, r);
+        this.g.fill();
       }
-      this.claw.angle = (this.swingAngle * 180) / Math.PI - 36;
+      // 还原
+      this.g.fillColor = saved;
     }
-
-    // 伸长
-    if (this.state === RopeState.EXTEND) {
-      this.currentLength += this.extendSpeed * deltaTime;
-      if (this.currentLength >= this.maxLength) {
-        this.currentLength = this.maxLength;
-        this.state = RopeState.RETRACT;
-      }
-    }
-
-    // 收回
-    if (this.state === RopeState.RETRACT) {
-      this.currentLength -= this.retractSpeed * deltaTime;
-      if (this.currentLength <= this.minLength) {
-        this.currentLength = this.minLength;
-        this.state = RopeState.SWING;
-        // 回到摆动状态时重置命中标记
-        this.hit = false;
-      }
-
-    }
-
-
   }
 
   onDestroy() {
