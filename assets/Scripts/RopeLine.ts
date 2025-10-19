@@ -53,7 +53,12 @@ export class RopeLine extends Component {
   extraOvershoot: number = 120; // 超出底部的额外像素
 
   private state: RopeState = RopeState.SWING;
-  private hit: boolean = false; // 是否碰撞（用于防止多次触发）
+  private hit: boolean = false; // 是否已命中（用于防止多次触发）
+  private pendingRetractLength: number | null = null; // 命中后需要继续伸入到的长度
+
+  // 命中后继续向内“深入”的像素，达到后再开始收回（近似爪子半径/高度）
+  @property
+  hitDepthPx: number = 20;
 
   // 在末端预留的像素（如果你的钩子贴图不带绳子，设为 0 即可）
   @property
@@ -140,8 +145,10 @@ export class RopeLine extends Component {
   // 被 Claw.ts 调用，通知碰撞发生
   onClawHit() {
     if (this.state === RopeState.EXTEND && !this.hit) {
-      this.hit = true; // 标记一次命中，避免重复触发造成频繁日志/卡顿
-      this.state = RopeState.RETRACT;
+      this.hit = true; // 记录命中一次
+      // 记录需要“深入”到的目标长度，达到后再开始收回
+      const target = Math.min(this.maxLength, this.currentLength + Math.max(0, this.hitDepthPx));
+      this.pendingRetractLength = target;
     }
   }
 
@@ -210,6 +217,12 @@ export class RopeLine extends Component {
     // 伸长
     if (this.state === RopeState.EXTEND) {
       this.currentLength += this.extendSpeed * deltaTime;
+
+      // 命中后达到“深入长度”再开始收回
+      if (this.hit && this.pendingRetractLength != null && this.currentLength >= this.pendingRetractLength) {
+        this.state = RopeState.RETRACT;
+      }
+
       if (this.currentLength >= this.maxLength) {
         this.currentLength = this.maxLength;
         this.state = RopeState.RETRACT;
@@ -223,6 +236,7 @@ export class RopeLine extends Component {
         this.currentLength = this.minLength;
         this.state = RopeState.SWING;
         this.hit = false;
+        this.pendingRetractLength = null; //   Reset delay-after-hit target
       }
     }
   }
