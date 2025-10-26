@@ -64,6 +64,13 @@ export class RopeLine extends Component {
   @property
   hideAtClawPx: number = 0;
 
+
+  // 抓取归属：命中后被抓住的宝物及其价值、弹出控制与总金额
+  private heldNode: Node | null = null;
+  private heldValue: number = 0;
+  private popupShown: boolean = false;
+  public totalMoney: number = 0;
+
   // 像素对齐，避免亚像素导致的“看起来像两根/半透明”抖动
   @property
   pixelSnap: boolean = false;
@@ -142,14 +149,24 @@ export class RopeLine extends Component {
     }
   }
 
-  // 被 Claw.ts 调用，通知碰撞发生
-  onClawHit() {
+  // 被 Claw.ts 调用，通知碰撞发生（携带命中节点与其价值）
+  onClawHit(node?: Node, val?: number) {
     if (this.state === RopeState.EXTEND && !this.hit) {
       this.hit = true; // 记录命中一次
       // 记录需要“深入”到的目标长度，达到后再开始收回
       const target = Math.min(this.maxLength, this.currentLength + Math.max(0, this.hitDepthPx));
       this.pendingRetractLength = target;
+      if (node && typeof val === 'number') {
+        this.heldNode = node;
+        this.heldValue = val;
+      }
     }
+  }
+
+  onEnable() {
+    // 再保险：启用时立即初始化一次，并在下一帧再设一次，避免资源加载顺序导致初始不显示
+    this.updateHudTotal(this.totalMoney);
+    this.scheduleOnce(() => this.updateHudTotal(this.totalMoney), 0);
   }
 
   start() {
@@ -187,6 +204,9 @@ export class RopeLine extends Component {
     if (this.claw) {
       this.claw.setPosition(x, y);
     }
+    // 初始化 HUD 数字显示为 0
+    this.updateHudTotal(this.totalMoney);
+
   }
 
   update(deltaTime: number) {
@@ -251,6 +271,35 @@ export class RopeLine extends Component {
     if (this.claw) {
       const theta = Math.atan2(targetY, targetX);
       this.claw.angle = theta * 180 / Math.PI + this.clawAngleOffset;
+    }
+
+    // 命中后的宝物跟随爪子（用世界坐标，避免父子缩放影响）
+    if (this.heldNode && this.claw) {
+      const wp = this.claw.worldPosition;
+      this.heldNode.setWorldPosition(wp.x, wp.y, 0);
+    }
+
+    // 在收回阶段到达阈值（startLength * 1/3）时弹出金额
+    if (this.state === RopeState.RETRACT) {
+      const trigger = this.startLength * (1 / 3);
+      if (!this.popupShown && this.heldValue > 0 && this.currentLength <= trigger) {
+        this.popupShown = true;
+        this.showPopupAtMid(this.heldValue);
+      }
+    }
+
+    // 收回完成后（状态回到 SWING），结算：累计 HUD、销毁宝物、清理状态
+    if (this.state === RopeState.SWING && (this.heldNode || this.heldValue > 0)) {
+      if (this.heldValue > 0) {
+        this.totalMoney += this.heldValue;
+        this.updateHudTotal(this.totalMoney);
+      }
+      if (this.heldNode) this.heldNode.destroy();
+      this.heldNode = null;
+      this.heldValue = 0;
+      this.popupShown = false;
+      this.pendingRetractLength = null;
+      this.hit = false;
     }
 
     let endX = targetX;
@@ -334,6 +383,53 @@ export class RopeLine extends Component {
       // 还原
       this.g.fillColor = saved;
     }
+  }
+
+  // 递归在指定根节点下查找名字为 name 的子节点（宽松类型以兼容 Scene/Node）
+  private findChildDeep(root: any, name: string): any {
+    if (!root) return null;
+    if (root.name === name) return root;
+    const children: any[] = root.children || [];
+    for (const ch of children) {
+      const r = this.findChildDeep(ch, name);
+      if (r) return r;
+    }
+    return null;
+  }
+
+  // 计算弹出金额的位置：先取 CurrentAssets 与 CurrentTarget 的中点，再与 MinerBackground 的中点
+  private getPopupPos() {
+    const canvas = this.node.scene.getChildByName('Canvas');
+    if (!canvas) return this.node.worldPosition.clone();
+    const a = this.findChildDeep(canvas, 'CurrentAssets');
+    const t = this.findChildDeep(canvas, 'CurrentTarget');
+    const m = this.findChildDeep(canvas, 'MinerBackground');
+    if (!a || !t || !m) return this.node.worldPosition.clone();
+    const p12 = a.worldPosition.clone().add(t.worldPosition).multiplyScalar(0.5);
+    return p12.add(m.worldPosition).multiplyScalar(0.5);
+  }
+
+  // 在指定位置短暂显示本次宝物金额
+  private showPopupAtMid(v: number) {
+    const canvas = this.node.scene.getChildByName('Canvas');
+    if (!canvas) return;
+    const popup = this.findChildDeep(canvas, 'PopupMoney');
+    if (!popup) return;
+    const pos = this.getPopupPos();
+    popup.setWorldPosition(pos.x, pos.y, pos.z);
+    popup.active = true;
+    const comp: any = (popup as any).getComponent && (popup as any).getComponent('NumberDisplay');
+    if (comp && typeof comp.setValue === 'function') comp.setValue(v);
+    this.scheduleOnce(() => { popup.active = false; }, 0.8);
+  }
+
+  // 更新左上角总金额数字
+  private updateHudTotal(n: number) {
+    const canvas = this.node.scene.getChildByName('Canvas');
+    if (!canvas) return;
+    const hud = this.findChildDeep(canvas, 'MoneyTotal');
+    const comp: any = hud ? (hud as any).getComponent && (hud as any).getComponent('NumberDisplay') : null;
+    if (comp && typeof comp.setValue === 'function') comp.setValue(n);
   }
 
   onDestroy() {
