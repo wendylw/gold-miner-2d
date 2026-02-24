@@ -4,7 +4,6 @@ import {
   Graphics,
   Node,
   EventTouch,
-  Collider2D,
   director,
   systemEvent,
   SystemEvent,
@@ -68,6 +67,7 @@ export class RopeLine extends Component {
   // 抓取归属：命中后被抓住的宝物及其价值、弹出控制与总金额
   private heldNode: Node | null = null;
   private heldValue: number = 0;
+  private heldWeight: number = 1;
   private popupShown: boolean = false;
   public totalMoney: number = 0;
 
@@ -150,15 +150,16 @@ export class RopeLine extends Component {
   }
 
   // 被 Claw.ts 调用，通知碰撞发生（携带命中节点与其价值）
-  onClawHit(node?: Node, val?: number) {
+  onClawHit(node?: Node, val?: number, weight?: number) {
     if (this.state === RopeState.EXTEND && !this.hit) {
       this.hit = true; // 记录命中一次
-      // 记录需要“深入”到的目标长度，达到后再开始收回
+      // 记录需要”深入”到的目标长度，达到后再开始收回
       const target = Math.min(this.maxLength, this.currentLength + Math.max(0, this.hitDepthPx));
       this.pendingRetractLength = target;
       if (node && typeof val === 'number') {
         this.heldNode = node;
         this.heldValue = val;
+        this.heldWeight = weight ?? 1;
       }
     }
   }
@@ -249,9 +250,10 @@ export class RopeLine extends Component {
       }
     }
 
-    // 收回
+    // 收回（重量越大速度越慢）
     if (this.state === RopeState.RETRACT) {
-      this.currentLength -= this.retractSpeed * deltaTime;
+      const effectiveSpeed = this.retractSpeed / this.heldWeight;
+      this.currentLength -= effectiveSpeed * deltaTime;
       if (this.currentLength <= this.minLength) {
         this.currentLength = this.minLength;
         this.state = RopeState.SWING;
@@ -273,15 +275,30 @@ export class RopeLine extends Component {
       this.claw.angle = theta * 180 / Math.PI + this.clawAngleOffset;
     }
 
-    // 命中后的宝物跟随爪子（用世界坐标，避免父子缩放影响）
+    // 命中后的宝物跟随爪子（沿绳子方向偏移，让爪子夹在物体顶部而非中心）
     if (this.heldNode && this.claw) {
-      const wp = this.claw.worldPosition;
-      this.heldNode.setWorldPosition(wp.x, wp.y, 0);
+      const clawWP = this.claw.worldPosition;
+      const ropeWP = this.node.worldPosition;
+      const dirX = clawWP.x - ropeWP.x;
+      const dirY = clawWP.y - ropeWP.y;
+      const dirLen = Math.hypot(dirX, dirY);
+      if (dirLen > 0) {
+        const nx = dirX / dirLen;
+        const ny = dirY / dirLen;
+        // 按物体实际大小动态偏移：大物体多偏移，小物体少偏移
+        const heldUI = this.heldNode.getComponent(UITransform);
+        const heldScale = Math.abs(this.heldNode.scale.x);
+        const halfSize = heldUI ? Math.max(heldUI.width, heldUI.height) * heldScale * 0.5 : 0;
+        const tipOffset = halfSize * 0.75;
+        this.heldNode.setWorldPosition(clawWP.x + nx * tipOffset, clawWP.y + ny * tipOffset, 0);
+      } else {
+        this.heldNode.setWorldPosition(clawWP.x, clawWP.y, 0);
+      }
     }
 
-    // 在收回阶段到达阈值（startLength * 1/3）时弹出金额
+    // 在收回阶段接近顶部时弹出金额
     if (this.state === RopeState.RETRACT) {
-      const trigger = this.startLength * (1 / 3);
+      const trigger = this.minLength + 50;
       if (!this.popupShown && this.heldValue > 0 && this.currentLength <= trigger) {
         this.popupShown = true;
         this.showPopupAtMid(this.heldValue);
@@ -297,6 +314,7 @@ export class RopeLine extends Component {
       if (this.heldNode) this.heldNode.destroy();
       this.heldNode = null;
       this.heldValue = 0;
+      this.heldWeight = 1;
       this.popupShown = false;
       this.pendingRetractLength = null;
       this.hit = false;

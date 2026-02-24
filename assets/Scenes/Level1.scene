@@ -186,7 +186,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 441.12994350282486,
+    "_orthoHeight": 436.96019300361877,
     "_near": 0,
     "_far": 2000,
     "_color": {
@@ -1490,7 +1490,7 @@
     "spacing": 2,
     "digitWidth": 20,
     "digitHeight": 30,
-    "scale": 0.6,
+    "scale": 0.15,
     "_id": "3cidyga21NIqpZGwSz6w1F"
   },
   {
@@ -4443,9 +4443,9 @@
     "_offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": -5
     },
-    "_radius": 14,
+    "_radius": 5,
     "_id": "ae9KxZz+ZCRq3ixLUyXWR4"
   },
   {
@@ -4483,8 +4483,8 @@
     "maxLength": 500,
     "extendSpeed": 100,
     "retractSpeed": 300,
-    "swingSpeed": 1,
-    "swingRange": 1,
+    "swingSpeed": 0.5,
+    "swingRange": 1.3,
     "autoComputeMaxLength": true,
     "extraOvershoot": 120,
     "hitDepthPx": 20,

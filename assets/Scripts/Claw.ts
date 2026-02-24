@@ -13,6 +13,16 @@ const valOf = (n: string) => {
   return 0;
 };
 
+// 重量映射：数值越大收回越慢
+const weightOf = (n: string) => {
+  if (/Stone/i.test(n)) return 8.0;
+  if (/GoldNugget-1/i.test(n)) return 9.0;
+  if (/MoneyBag/i.test(n)) return 5.0;
+  if (/GoldNugget-2/i.test(n)) return 4.0;
+  if (/GoldNugget-3/i.test(n)) return 2.0;
+  return 1.0;
+};
+
 @ccclass('Claw')
 export class Claw extends Component {
   onLoad() {
@@ -34,12 +44,14 @@ export class Claw extends Component {
   onClawHit(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
     const ropeLine = this.node.parent.getComponent(RopeLine);
     const hitNode = otherCollider?.node;
-    const value = valOf(hitNode?.name || '');
-    // 只在绳子伸长且命中“可收集目标”时触发
+    const name = hitNode?.name || '';
+    const value = valOf(name);
+    const weight = weightOf(name);
+    // 只在绳子伸长且命中”可收集目标”时触发
     if (ropeLine && ropeLine['state'] === 1 && value > 0 && hitNode) {
       // RopeState.EXTEND = 1
-      // 把命中的节点与价值传给绳子
-      (ropeLine as any).onClawHit(hitNode, value);
+      // 把命中的节点、价值与重量传给绳子
+      (ropeLine as any).onClawHit(hitNode, value, weight);
     }
   }
 }
